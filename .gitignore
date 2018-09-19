@@ -3,6 +3,7 @@ yarn.lock
 *.iml
 *.jar
 .idea
+.shadow-cljs
 checkouts
 classes
 figwheel_server.log
