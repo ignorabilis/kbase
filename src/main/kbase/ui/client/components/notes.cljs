@@ -1,12 +1,11 @@
-(ns kbase.notes
+(ns kbase.ui.client.components.notes
   (:require [kbase.ui.semanticui.components :as sui]
             [fulcro.client.mutations :as m :refer [defmutation]]
             [fulcro.client.dom :as dom]
             [fulcro.client.primitives :refer [defsc]]
             [fulcro.events :as e]
             [fulcro.client.cards :refer [defcard-fulcro]]
-            [fulcro.client.primitives :as prim]
-            [fulcro.client.data-fetch :as df]))
+            [fulcro.client.primitives :as prim]))
 
 ;; needs tags
 (defsc NoteItem [this {:keys [db/id note/url
@@ -64,19 +63,3 @@
    (mapv ui-note-item note-items)))
 
 (def ui-notes (prim/factory Notes))
-
-(defsc Root [this {:keys [ui/react-key root/notes]}]
-  {:query         [:ui/react-key {:root/notes (prim/get-query Notes)}]}
-  (dom/div
-   #js {:key react-key}
-   (ui-notes notes)))
-
-(defcard-fulcro
- note-item-1
- "# A preview for the notes widget."
- Root
- {}
- {:inspect-data true
-  :fulcro       {:started-callback (fn [app]
-                                     (df/load app :fetch/notes Notes {:marker false
-                                                                      :target [:root/notes]}))}})

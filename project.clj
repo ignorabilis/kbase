@@ -16,10 +16,13 @@
 
                  ;; Comm
                  [bidi "2.1.3"]
-                 [com.draines/postal "2.0.2"]
+
+                 ;; TODO - guava clash with one of these libs prevents shadow-cljs from working
+                 ;; https://github.com/thheller/shadow-cljs/issues/350
+                 #_[com.draines/postal "2.0.2"]
 
                  ;; Parsing/scraping
-                 [clojurewerkz/urly "1.0.0"]
+                 #_[clojurewerkz/urly "1.0.0"]
 
                  ;; Tests
                  [fulcrologic/fulcro-spec "2.1.0-1" :scope "test" :exclusions [fulcrologic/fulcro]]]
