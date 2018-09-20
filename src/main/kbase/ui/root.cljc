@@ -16,7 +16,7 @@
                       (or (string? known-meaning) (pos? known-meaning)) known-meaning
                       :otherwise "")]
     (dom/div
-      (dom/span (trf "The meaning of {what} is {meaning}." :what (name which-meaning) :meaning meaning))
+      (dom/span (trf "The !!!meaning of {what} is {meaning}." :what (name which-meaning) :meaning meaning))
       (dom/button {:onClick (fn [e]
                               (df/load-field component which-meaning
                                 ; put the load marker in the df/marker-table at a key like :life

@@ -1,6 +1,7 @@
 (ns kbase.client
   (:require [fulcro.client :as fc]
             [kbase.ui.root :as root]
+            [kbase.ui.client.components :as ccomp]
             [fulcro.i18n :as i18n]
             ["intl-messageformat" :as IntlMessageFormat]))
 
@@ -12,7 +13,7 @@
 (defonce app (atom nil))
 
 (defn mount []
-  (reset! app (fc/mount @app root/Root "app")))
+  (reset! app (fc/mount @app ccomp/SomeComponent "app")))
 
 (defn start []
   (mount))

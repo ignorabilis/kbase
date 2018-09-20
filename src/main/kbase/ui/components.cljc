@@ -1,8 +1,7 @@
 (ns kbase.ui.components
   (:require
     [fulcro.client.primitives :as prim :refer [defsc]]
-    #?(:cljs [fulcro.client.dom :as dom] :clj [fulcro.client.dom-server :as dom])
-    ["semantic-ui-react" :refer [Dropdown DropdownItem DropdownMenu]]))
+    #?(:cljs [fulcro.client.dom :as dom] :clj [fulcro.client.dom-server :as dom])))
 
 ;; A good place to put reusable components
 (defsc PlaceholderImage [this {:keys [w h label]}]
