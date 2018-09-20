@@ -3,17 +3,25 @@
   :license {:name "MIT" :url "https://opensource.org/licenses/MIT"}
   :min-lein-version "2.7.0"
 
-  :dependencies [[org.clojure/clojure "1.9.0"]
+  :dependencies [
+                 ;; Core
+                 [org.clojure/clojure "1.9.0"]
                  [thheller/shadow-cljs "2.4.22"]
                  [fulcrologic/fulcro "2.6.0-RC9"]
 
-                 ; Only required if you use server
+                 ;; Server
                  [http-kit "2.3.0"]
                  [ring/ring-core "1.6.3" :exclusions [commons-codec]]
                  [bk/ring-gzip "0.2.1"]
-                 [bidi "2.1.3"]
 
-                 ; only required if you want to use this for tests
+                 ;; Comm
+                 [bidi "2.1.3"]
+                 [com.draines/postal "2.0.2"]
+
+                 ;; Parsing/scraping
+                 [clojurewerkz/urly "1.0.0"]
+
+                 ;; Tests
                  [fulcrologic/fulcro-spec "2.1.0-1" :scope "test" :exclusions [fulcrologic/fulcro]]]
 
   :uberjar-name "kbase.jar"

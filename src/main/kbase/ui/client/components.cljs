@@ -15,10 +15,11 @@
     {:color "red"
      :basic true}
     "some text")
-   (ui-dropdown {:text "Filter"}
-                (ui-dropdown-menu
-                 (ui-dropdown-item {} "A")
-                 (ui-dropdown-item {} "B")
-                 (ui-dropdown-item {} "C")))))
+   (ui-dropdown
+    {:text "Filter"}
+    (ui-dropdown-menu
+     (ui-dropdown-item {} "A")
+     (ui-dropdown-item {} "B")
+     (ui-dropdown-item {} "C")))))
 
 (def ui-some-comp (prim/factory SomeComponent))
