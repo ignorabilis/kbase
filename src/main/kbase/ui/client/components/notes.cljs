@@ -39,7 +39,7 @@
     (sui/ui-list-description
      {:as "div"}
      (dom/div
-      {:style {:min-height "80px"}}
+      {:style {:minHeight "80px"}}
       description)
      (dom/div
       (sui/ui-label-group

@@ -47,8 +47,7 @@
                                       :note/image-url   (str "https://picsum.photos/100/?image" (rand-int 1000))
                                       :note/domain      "https://www.nytimes.com"}}
                       :notes      {1 {:db/id            1
-                                      :notes/note-items [[:note-items 1] [:note-items 2] [:note-items 3]]}}
-                      :summaries  {1 {:db/id 1 :summary/name "Year to Date Revenue (from db)"}}}))
+                                      :notes/note-items [[:note-items 1] [:note-items 2] [:note-items 3]]}}}))
 
 
 ;; TODO - check queries here
@@ -64,21 +63,11 @@
           result)))
 
 (defquery-entity
- :summary/by-id
- (value [{:keys [query]} id params]
-        (let [data   (prim/db->tree
-                      [{[:summaries id] query}]
-                      @kbase-database
-                      @kbase-database)
-              result (get data [:summaries id])]
-          result)))
-
-(defquery-entity
  :notes/by-id
  (value [{:keys [query]} id params]
         (let [data   (prim/db->tree
-                      [{[:summaries id] query}]
+                      [{[:notes id] query}]
                       @kbase-database
                       @kbase-database)
-              result (get data [:summaries id])]
+              result (get data [:notes id])]
           result)))

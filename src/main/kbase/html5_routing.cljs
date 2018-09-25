@@ -1,20 +1,20 @@
 (ns kbase.html5-routing
   (:require
+    [kbase.ui.client.components.notes :as notes]
     [fulcro.client.routing :as r]
     [fulcro.client.mutations :refer [defmutation]]
-    [kbase.ui.client.pages.dashboard :as dashboard]
-    [pushy.core :as pushy]
-    [bidi.verbose :refer [branch leaf param]]
-    [bidi.bidi :as bidi]
     [fulcro.client.primitives :as om]
     [fulcro.client.data-fetch :as df]
-    [kbase.ui.client.components.notes :as notes]))
+    [pushy.core :as pushy]
+    [bidi.verbose :refer [branch leaf param]]
+    [bidi.bidi :as bidi]))
 
 (def app-routing-tree
   (r/routing-tree
    (r/make-route :page-handlers/landing [(r/router-instruction :top-router [:pages/landing :single])])
    (r/make-route :page-handlers/login [(r/router-instruction :top-router [:pages/login :single])])
-   (r/make-route :page-handlers/dashboard [(r/router-instruction :top-router [:pages/dashboard :single])])))
+   (r/make-route :page-handlers/dashboard [(r/router-instruction :top-router [:pages/dashboard :single])
+                                           (r/router-instruction :notes-router [:notes/by-id :param/id])])))
 
 (def valid-handlers (-> (get app-routing-tree r/routing-tree-key) keys set))
 
@@ -32,13 +32,14 @@
    (leaf "" :page-handlers/landing)
    (leaf "index.html" :page-handlers/landing)
    (leaf "login" :page-handlers/login)
-   (leaf "dashboard" :page-handlers/dashboard)))
+   (branch "dashboard/" (param :id)
+           (leaf "" :page-handlers/dashboard))))
 
 (comment
  url-route-mappings
  (bidi/match-route url-route-mappings "/")
  (bidi/match-route url-route-mappings "/login")
- (bidi/match-route url-route-mappings "/dashboard"))
+ (bidi/match-route url-route-mappings "/dashboard/1"))
 
 (defn invalid-route?
   "Returns true if the given keyword is not a valid location in the routing tree."
@@ -65,7 +66,7 @@
 (defn- ensure-notes-loaded [{:keys [state] :as env} id]
   (when-not (get-in @state [:notes/by-id id])
     (swap! state assoc-in [:notes/by-id id] {:db/id id :loading "Loading..."})
-    (df/load-action env [:notes/by-id id] dashboard/DashboardPage {:marker false})))
+    (df/load-action env [:notes/by-id id] notes/Notes {:marker false})))
 
 (defn- ensure-integer
   "Helper for set-integer!, use that instead. It is recommended you use this function only on UI-related
@@ -78,21 +79,20 @@
   "Make sure a placeholder object is in place, and issue a load-action if something is missing"
   [env {:keys [handler route-params] :as bidi-match}]
   (let [{:keys [id]} route-params
-        ;; TODO HACK - this should be getting the real id
-        id 1 #_(or (ensure-integer id) 1)]
+        id (ensure-integer id)]
     (cond
       (= :page-handlers/dashboard handler) (ensure-notes-loaded env id))))
 
 (defmutation set-route!
-             "Mutation:
+  "Mutation:
 
-             Set the route to the given bidi match. Checks to make sure the user is allowed to do so (are
-             they logged in?). Sends them to the login screen if they are not logged in. This does NOT update the URI."
-             [bidi-match]
-             (action [{:keys [state] :as env}]
-                     (ensure-routeable env bidi-match)                       ; make sure loadable things at least look sane
-                     (swap! state set-route!* bidi-match))
-             (remote [env] (df/remote-load env)))
+  Set the route to the given bidi match. Checks to make sure the user is allowed to do so (are
+  they logged in?). Sends them to the login screen if they are not logged in. This does NOT update the URI."
+  [bidi-match]
+  (action [{:keys [state] :as env}]
+          (ensure-routeable env bidi-match) ; make sure loadable things at least look sane
+          (swap! state set-route!* bidi-match))
+  (remote [env] (df/remote-load env)))
 
 (defn nav-to!
   "Run a navigation mutation from the UI, but make sure that HTML5 routing is correctly honored so the components can be
