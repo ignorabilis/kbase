@@ -1,11 +1,12 @@
 (ns kbase.client
-  (:require [kbase.ui.root :as root]
-            [kbase.ui.client.pages.dashboard :as dashboard]
+  (:require [kbase.ui.client.pages.root :as root]
             [kbase.ui.client.components.notes :as notes]
+            [kbase.html5-routing :as r]
             [fulcro.client :as fc]
             [fulcro.i18n :as i18n]
-            ["intl-messageformat" :as IntlMessageFormat]
-            [fulcro.client.data-fetch :as df]))
+            [fulcro.client.data-fetch :as df]
+            [fulcro.client.primitives :as prim]
+            ["intl-messageformat" :as IntlMessageFormat]))
 
 (defn message-format [{:keys [::i18n/localized-format-string ::i18n/locale ::i18n/format-options]}]
   (let [locale-str (name locale)
@@ -15,17 +16,18 @@
 (defonce app (atom nil))
 
 (defn mount []
-  (reset! app (fc/mount @app dashboard/DashboardPage "app")))
+  (reset! app (fc/mount @app root/Root "app")))
 
 (defn start []
   (mount))
 
 (defn ^:export init []
   (reset! app (fc/new-fulcro-client
-               :reconciler-options {:shared    {::i18n/message-formatter message-format}
-                                          :render-mode :keyframe ; Good for beginners. Remove to optimize UI refresh
-                                          :shared-fn ::i18n/current-locale}
-               :started-callback (fn [app]
-                                          (df/load app :fetch/notes notes/Notes {:marker false
-                                                                           :target [:root/notes]}))))
+               :reconciler-options {:shared      {::i18n/message-formatter message-format}
+                                    :render-mode :keyframe ; Good for beginners. Remove to optimize UI refresh
+                                    :shared-fn   ::i18n/current-locale}
+               :started-callback (fn [{:keys [reconciler] :as app}]
+                                   (r/start-routing (prim/app-root reconciler))
+                                   (df/load app :fetch/notes notes/Notes {:marker false
+                                                                          :target [:root/notes]}))))
   (start))

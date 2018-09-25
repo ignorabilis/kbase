@@ -7,9 +7,10 @@
                      :modules    {:app {:entries [kbase.client]}}
 
                      :devtools   {:after-load kbase.client/start
-                                              :preloads [fulcro.inspect.preload kbase.development-preload]
-                                              :http-root "resources/public"
-                                              :http-port 8020}}
+                                  :preloads   [fulcro.inspect.preload kbase.development-preload]
+                                  :http-root  "resources/public"
+                                  :http-handler shadow.http.push-state/handle
+                                  :http-port  8020}}
 
           :i18n     {:target           :browser
                      :output-dir       "target/i18n"
@@ -22,9 +23,9 @@
                      :ns-regexp        "-spec$"
                      :compiler-options {:static-fns false} ; required for mocking to work
                      :runner-ns        kbase.client-test-main
-                                       :devtools {:http-port          8022
-                                                  :http-resource-root "public"
-                                                  :http-root          "resources/public/js/test"}}
+                     :devtools         {:http-port          8022
+                                        :http-resource-root "public"
+                                        :http-root          "resources/public/js/test"}}
 
           :ci-tests {:target           :karma
                      :js-options       {:js-provider :shadow}
@@ -39,6 +40,6 @@
                      :modules          {:main
                                         {:entries [kbase.cards]}}
                      :devtools         {:after-load kbase.cards/refresh
-                                                    :preloads [fulcro.inspect.preload kbase.development-preload]
-                                                    :http-root "resources/public"
-                                                    :http-port 8023}}}}
+                                        :preloads   [fulcro.inspect.preload kbase.development-preload]
+                                        :http-root  "resources/public"
+                                        :http-port  8023}}}}

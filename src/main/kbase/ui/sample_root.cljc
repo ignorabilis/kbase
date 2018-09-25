@@ -1,4 +1,4 @@
-(ns kbase.ui.root
+(ns kbase.ui.sample-root
   (:require
     [fulcro.client.mutations :as m]
     [fulcro.client.data-fetch :as df]
