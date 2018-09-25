@@ -1,6 +1,6 @@
 (ns kbase.html5-routing
   (:require
-    [kbase.ui.client.components.notes :as notes]
+    [kbase.ui.client.pages.dashboard :as dashboard]
     [fulcro.client.routing :as r]
     [fulcro.client.mutations :refer [defmutation]]
     [fulcro.client.primitives :as om]
@@ -14,7 +14,7 @@
    (r/make-route :page-handlers/landing [(r/router-instruction :top-router [:pages/landing :single])])
    (r/make-route :page-handlers/login [(r/router-instruction :top-router [:pages/login :single])])
    (r/make-route :page-handlers/dashboard [(r/router-instruction :top-router [:pages/dashboard :single])
-                                           (r/router-instruction :notes-router [:notes/by-id :param/id])])))
+                                           (r/router-instruction :dashboard-router [:notes/by-id :param/id])])))
 
 (def valid-handlers (-> (get app-routing-tree r/routing-tree-key) keys set))
 
@@ -66,7 +66,7 @@
 (defn- ensure-notes-loaded [{:keys [state] :as env} id]
   (when-not (get-in @state [:notes/by-id id])
     (swap! state assoc-in [:notes/by-id id] {:db/id id :loading "Loading..."})
-    (df/load-action env [:notes/by-id id] notes/Notes {:marker false})))
+    (df/load-action env [:notes/by-id id] dashboard/DashboardPage {:marker false})))
 
 (defn- ensure-integer
   "Helper for set-integer!, use that instead. It is recommended you use this function only on UI-related

@@ -28,6 +28,7 @@
                                     :shared-fn   ::i18n/current-locale}
                :started-callback (fn [{:keys [reconciler] :as app}]
                                    (r/start-routing (prim/app-root reconciler))
-                                   (df/load app :fetch/notes notes/Notes {:marker false
+                                   ;; TODO - use this to load the user instead
+                                   #_(df/load app :fetch/notes notes/Notes {:marker false
                                                                           :target [:root/notes]}))))
   (start))

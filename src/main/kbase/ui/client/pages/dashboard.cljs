@@ -6,9 +6,8 @@
             [fulcro.client.dom :as dom]))
 
 (defsc DashboardPage [this props]
-  {:query         [:screen]
-   :initial-state {:screen :pages/dashboard}
-   :ident         (fn [] [(:screen props) :single])}
+  {:query [:db/id {:notes/note-items (prim/get-query notes/NoteItem)}]
+   :ident [:notes/by-id :db/id]}
   (dom/div
    (sui/ui-grid
     {:columns   2
@@ -20,12 +19,6 @@
      "Tags, Types here")
     (sui/ui-grid-column
      {:width 13}
-     (notes/ui-notes)))))
+     (notes/ui-notes props)))))
 
 (def ui-dashboard (prim/factory DashboardPage))
-
-#_(defsc DashboardPage [this {:keys [screen] :as props}]
-    {:query         [:screen]
-     :initial-state {:screen :pages/dashboard}
-     :ident         (fn [] [(:screen props) :single])}
-    (ui-dashboard))

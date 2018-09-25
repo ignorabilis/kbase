@@ -6,19 +6,18 @@
     [kbase.html5-routing :as routing]
     [fulcro.client.dom :as dom]
     [fulcro.client.primitives :as prim :refer [defsc]]
-    [fulcro.client.routing :as r :refer [defrouter]]
-    [kbase.ui.client.components.notes :as notes]))
+    [fulcro.client.routing :as r :refer [defrouter]]))
 
-(defrouter NotesRouter :notes-router
+(defrouter DashboardRouter :dashboard-router
            (ident [this props] [:notes/by-id (:db/id props)])
-           :notes/by-id notes/Notes)
+           :notes/by-id DashboardPage)
 
-(def ui-report-router (prim/factory NotesRouter))
+(def ui-report-router (prim/factory DashboardRouter))
 
-(defsc NotesHome [this {:keys [notes] :as props}]
-  {:query         [:screen {:notes (prim/get-query NotesRouter)}]
+(defsc DashboardHome [this {:keys [notes] :as props}]
+  {:query         [:screen {:notes (prim/get-query DashboardRouter)}]
    :initial-state {:screen :pages/dashboard
-                   :notes {}}
+                   :notes  {}}
    :ident         (fn [] [(:screen props) :single])}
   (ui-report-router notes))
 
@@ -26,7 +25,7 @@
            (ident [this props] [(:screen props) :single])
            :pages/landing LandingPage
            :pages/login LoginPage
-           :pages/dashboard NotesHome)
+           :pages/dashboard DashboardHome)
 
 (def ui-top-router (prim/factory TopRouter))
 
