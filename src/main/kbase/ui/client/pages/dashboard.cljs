@@ -8,17 +8,16 @@
 (defsc DashboardPage [this props]
   {:query [:db/id {:notes/note-items (prim/get-query notes/NoteItem)}]
    :ident [:notes/by-id :db/id]}
-  (dom/div
-   (sui/ui-grid
-    {:columns   2
-     :divided   true
-     :stretched true
-     :stackable true}
-    (sui/ui-grid-column
-     {:width 3}
-     "Tags, Types here")
-    (sui/ui-grid-column
-     {:width 13}
-     (notes/ui-notes props)))))
+  (sui/ui-grid
+   {:columns   2
+    :divided   true
+    :stretched true
+    :stackable true}
+   (sui/ui-grid-column
+    {:width 4}
+    "Tags, Types here")
+   (sui/ui-grid-column
+    {:width 12}
+    (notes/ui-notes props))))
 
 (def ui-dashboard (prim/factory DashboardPage))
