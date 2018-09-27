@@ -21,14 +21,12 @@
 (defn start []
   (mount))
 
+
 (defn ^:export init []
   (reset! app (fc/new-fulcro-client
                :reconciler-options {:shared      {::i18n/message-formatter message-format}
                                     :render-mode :keyframe ; Good for beginners. Remove to optimize UI refresh
-                                    :shared-fn   ::i18n/current-locale}
+                                    :shared-fn   #(select-keys % [::i18n/current-locale :root/current-user])}
                :started-callback (fn [{:keys [reconciler] :as app}]
-                                   (r/start-routing (prim/app-root reconciler))
-                                   ;; TODO - use this to load the user instead
-                                   #_(df/load app :fetch/notes notes/Notes {:marker false
-                                                                          :target [:root/notes]}))))
+                                   (r/start-routing (prim/app-root reconciler)))))
   (start))
