@@ -8,9 +8,10 @@
             [fulcro.client.cards :refer [defcard-fulcro]]
             [fulcro.client.primitives :as prim]))
 
-(defsc NotesList [this {:keys [db/id user/notes] :as props}]
+(defsc NotesList [this {:keys [db/id user/notes]}]
   {:query [:db/id {:user/notes (prim/get-query notes/NoteItem)}]}
-  (let [del-note-fn (fn [note-id]
+  (let [{:keys [url]} (prim/get-state this)
+        del-note-fn (fn [note-id]
                       (prim/transact! this `[(api/delete-note {:user-id ~id
                                                                :note-id ~note-id})]))
         tempid      (prim/tempid)]
@@ -18,12 +19,17 @@
      (sui/ui-input
       {:placeholder "Note URL"
        :type        "text"
+       :value       (or url "")
+       :onChange    #(prim/update-state! this assoc :url (.. % -target -value))
        :action      {:color   :teal
                      :icon    :plus
                      :onClick (fn []
+                                (prim/update-state! this assoc :url "")
                                 (prim/ptransact!
                                  this
-                                 `[(api/add-note {:user-id ~id :tempid ~tempid})
+                                 `[(api/add-note {:user-id ~id
+                                                  :tempid  ~tempid
+                                                  :url     ~url})
                                    (api/finish-add-note {:user-id ~id})]))}})
      (sui/ui-list
       {:divided true
