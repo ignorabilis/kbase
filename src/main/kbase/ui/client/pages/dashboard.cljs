@@ -1,6 +1,7 @@
 (ns kbase.ui.client.pages.dashboard
   (:require [kbase.ui.semanticui.components :as sui]
             [kbase.ui.client.components.notes :as notes]
+            [kbase.ui.client.components.notes-list :as notes-list]
             [fulcro.client.primitives :as prim :refer [defsc]]
             [fulcro.client.routing :as r :refer [defrouter]]
             [fulcro.client.dom :as dom]))
@@ -17,7 +18,7 @@
     "Tags, Types here")
    (sui/ui-grid-column
     {:width 12}
-    (notes/ui-notes user))))
+    (notes-list/ui-notes-list user))))
 
 (def ui-dashboard (prim/factory Dashboard))
 

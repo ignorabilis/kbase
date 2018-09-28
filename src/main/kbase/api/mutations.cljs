@@ -1,5 +1,6 @@
 (ns kbase.api.mutations
   (:require [kbase.util :as util]
+            [kbase.ui.client.components.notes :as notes]
             [fulcro.client.mutations :refer [defmutation]]
             [fulcro.client.logging :as log]
             [fulcro.client.primitives :as prim]
@@ -29,3 +30,26 @@
                 new-list (filterv #(not= (second %) note-id) old-list)]
             (swap! state assoc-in path new-list)))
   (remote [env] true))
+
+(defmutation add-note
+  [{:keys [user-id tempid]}]
+  (action [{:keys [state]}]
+          (let [user-notes-path [:user/by-id user-id :user/notes]
+                notes-path      [:note-item/by-id tempid]]
+            (swap!
+             state
+             (fn [state]
+               (let [state (assoc-in state notes-path {:db/id tempid})
+                     state (update-in state user-notes-path (fn [user-notes]
+                                                              (conj user-notes [:note-item/by-id tempid])))]
+                 state)))))
+  (remote
+   [{:keys [ast state]}]
+   (fulcro.client.mutations/returning ast @state notes/NoteItem)))
+
+(defmutation finish-add-note
+  [all #_{:keys [user-id]}]
+  (action [{:keys [state]}]
+          (prn "finish???" all)
+          state
+          ))

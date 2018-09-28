@@ -1,14 +1,11 @@
 (ns kbase.ui.client.components.notes
   (:require [kbase.ui.semanticui.components :as sui]
-            [kbase.api.mutations :as api]
             [fulcro.client.mutations :as m :refer [defmutation]]
             [fulcro.client.dom :as dom]
             [fulcro.client.primitives :refer [defsc]]
-            [fulcro.events :as e]
             [fulcro.client.cards :refer [defcard-fulcro]]
             [fulcro.client.primitives :as prim]))
 
-;; needs tags
 (defsc NoteItem [this
                  {:keys [db/id note/url
                          note/title note/description note/type note/image-url
@@ -65,20 +62,3 @@
       )))))
 
 (def ui-note-item (prim/factory NoteItem {:keyfn :db/id}))
-
-
-
-(defsc Notes [this {:keys [db/id user/notes] :as props}]
-  {:query [:db/id {:user/notes (prim/get-query NoteItem)}]}
-  (let [del-note-fn (fn [note-id]
-                      (prim/transact! this `[(api/delete-note {:user-id ~id
-                                                               :note-id ~note-id})]))]
-    (sui/ui-list
-     {:divided true
-      :relaxed true}
-     (mapv
-      (fn [note]
-        (ui-note-item (prim/computed note {:onDelete del-note-fn})))
-      notes))))
-
-(def ui-notes (prim/factory Notes))
