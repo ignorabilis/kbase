@@ -13,8 +13,7 @@
   (r/routing-tree
    (r/make-route :page-handlers/landing [(r/router-instruction :top-router [:pages/landing :single])])
    (r/make-route :page-handlers/login [(r/router-instruction :top-router [:pages/login :single])])
-   (r/make-route :page-handlers/dashboard [(r/router-instruction :top-router [:pages/dashboard :single])
-                                           (r/router-instruction :dashboard-router [:notes/by-id :param/id])])))
+   (r/make-route :page-handlers/dashboard [(r/router-instruction :top-router [:pages/dashboard :single])])))
 
 (def valid-handlers (-> (get app-routing-tree r/routing-tree-key) keys set))
 
@@ -32,7 +31,9 @@
    (leaf "" :page-handlers/landing)
    (leaf "index.html" :page-handlers/landing)
    (leaf "login" :page-handlers/login)
-   (branch "dashboard/" (param :id)
+   (leaf "dashboard" :page-handlers/dashboard)
+
+   #_(branch "dashboard/" (param :id)
            (leaf "" :page-handlers/dashboard))))
 
 (comment
@@ -63,10 +64,10 @@
     (redirect* state-map {:handler :page-handlers/landing})
     (r/update-routing-links state-map bidi-match)))
 
-(defn- ensure-notes-loaded [{:keys [state] :as env} id]
-  (when-not (get-in @state [:notes/by-id id])
-    (swap! state assoc-in [:notes/by-id id] {:db/id id :loading "Loading..."})
-    (df/load-action env [:notes/by-id id] dashboard/DashboardPage {:marker false})))
+(defn- ensure-notes-loaded [{:keys [state] :as env} {:keys [user-id]}]
+  (when-not (get-in @state [:user/by-id user-id :user/notes])
+    (swap! state assoc-in [:user/by-id user-id :user/notes] {:ui.loading "Loading..."})
+    (df/load-action env [:user/by-id user-id] dashboard/DashboardPage {:marker false})))
 
 (defn- ensure-integer
   "Helper for set-integer!, use that instead. It is recommended you use this function only on UI-related
@@ -80,8 +81,9 @@
   [env {:keys [handler route-params] :as bidi-match}]
   (let [{:keys [id]} route-params
         id (ensure-integer id)]
-    (cond
-      (= :page-handlers/dashboard handler) (ensure-notes-loaded env id))))
+    ;; not needed for now
+    #_(cond
+      (= :page-handlers/dashboard handler) (ensure-notes-loaded env route-params))))
 
 (defmutation set-route!
   "Mutation:

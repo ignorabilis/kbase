@@ -1,7 +1,7 @@
 (ns kbase.ui.client.pages.login.forms
   (:require [kbase.ui.semanticui.components :as sui]
             [kbase.api.mutations :as mutations]
-            [kbase.ui.client.pages.profile.forms :as profile-forms]
+            [kbase.ui.client.components.user :as user]
             [fulcro.client.dom :as dom]
             [fulcro.client.primitives :as prim :refer [defsc]]
             [fulcro.client.data-fetch :as df]
@@ -10,7 +10,7 @@
 
 (defmutation log-in [credentials]
   (action [{:keys [state] :as env}]
-          (df/load-action env :server.fetch/user profile-forms/SettingsForm
+          (df/load-action env :server.fetch/user user/UserLoad
                           {:params        credentials
                            :without       #{:fulcro.ui.form-state/config :user/password}
                            :post-mutation `mutations/rerender-root
@@ -19,9 +19,9 @@
           (df/remote-load env)))
 
 (defsc UserTinyPreview [this props]
-  {:query [:db/id :user/username :user/primary-email]
+  {:query         [:db/id :user/username :user/primary-email]
    :initial-state (fn [params] {:db/id :guest})
-   :ident [:user/by-id :db/id]})
+   :ident         [:user/by-id :db/id]})
 
 (defmutation log-out [_]
   (action [{:keys [state] :as env}]

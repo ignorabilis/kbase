@@ -54,12 +54,11 @@
 
 (def ui-note-item (prim/factory NoteItem {:keyfn :db/id}))
 
-(defsc Notes [this {:keys [db/id notes/note-items] :as props}]
-  {:query         [:db/id {:notes/note-items (prim/get-query NoteItem)}]
-   :ident         [:notes/by-id :db/id]}
+(defsc Notes [this {:keys [db/id user/notes] :as props}]
+  {:query         [:db/id {:user/notes (prim/get-query NoteItem)}]}
   (sui/ui-list
    {:divided true
     :relaxed true}
-   (mapv ui-note-item note-items)))
+   (mapv ui-note-item notes)))
 
 (def ui-notes (prim/factory Notes))

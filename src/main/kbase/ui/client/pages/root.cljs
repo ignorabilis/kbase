@@ -2,8 +2,8 @@
   (:require [kbase.ui.semanticui.components :as sui]
             [kbase.ui.client.pages.landing :refer [LandingPage]]
             [kbase.ui.client.pages.login.views :refer [LoginPage]]
-            [kbase.ui.client.pages.dashboard :refer [DashboardPage]]
-            [kbase.ui.client.pages.profile.forms :refer [SettingsForm]]
+            [kbase.ui.client.pages.dashboard :refer [Dashboard DashboardPage]]
+            [kbase.ui.client.components.user :refer [UserLoad]]
             [kbase.ui.client.pages.login.forms :refer [log-out]]
             [kbase.html5-routing :as routing]
             [fulcro.client.dom :as dom]
@@ -11,24 +11,11 @@
             [fulcro.client.routing :as r :refer [defrouter]]
             [clojure.string :as string]))
 
-(defrouter DashboardRouter :dashboard-router
-           (ident [this props] [:notes/by-id (:db/id props)])
-           :notes/by-id DashboardPage)
-
-(def ui-dashboard-router (prim/factory DashboardRouter))
-
-(defsc DashboardHome [this {:keys [notes] :as props}]
-  {:query         [:ui.pages/by-key {:notes (prim/get-query DashboardRouter)}]
-   :initial-state {:ui.pages/by-key :pages/dashboard
-                   :notes           {}}
-   :ident         (fn [] [(:ui.pages/by-key props) :single])}
-  (ui-dashboard-router notes))
-
 (defrouter TopRouter :top-router
            (ident [this props] [(:ui.pages/by-key props) :single])
            :pages/landing LandingPage
            :pages/login LoginPage
-           :pages/dashboard DashboardHome)
+           :pages/dashboard DashboardPage)
 
 (def ui-top-router (prim/factory TopRouter))
 
@@ -47,7 +34,7 @@
        (sui/ui-menu-item
         {:name    :pages/dashboard
          :active  (= current-route :pages/dashboard)
-         :onClick #(routing/nav-to! this :page-handlers/dashboard {:id 1})}))
+         :onClick #(routing/nav-to! this :page-handlers/dashboard)}))
      (sui/ui-menu-menu
       {:position :right}
       (when logged-in?
@@ -73,7 +60,7 @@
 
 (defsc Root [this {:keys [root/router] :as props}]
   {:query         [{:root/router (prim/get-query TopRouter)}
-                   {:root/current-user (prim/get-query SettingsForm)}]
+                   {:root/current-user (prim/get-query UserLoad)}]
    :initial-state (fn [p]
                     (merge
                      routing/app-routing-tree

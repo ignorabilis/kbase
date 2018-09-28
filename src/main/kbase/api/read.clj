@@ -55,7 +55,7 @@
                                       :note/domain      "https://www.nytimes.com"}}
                       :users      {1                                 {:db/id              1
                                                                       :user/username      "ignorabilis"
-                                                                      :user/password      "123456"
+                                                                      :user/password      "l"
                                                                       :user/primary-email "irina.yaroslavova@ignorabilis.com"
                                                                       :user/notes         [[:note-items 1] [:note-items 2] [:note-items 3]]}
                                    2                                 {:db/id              2
@@ -64,7 +64,9 @@
                                                                       :user/primary-email "irina.yaroslavova@gmail.com"
                                                                       :user/notes         [[:note-items 4]]}
                                    "irina.yaroslavova@ignorabilis.com" [:users 1]
-                                   "irina.yaroslavova@gmail.com"       [:users 2]}
+                                   "irina.yaroslavova@gmail.com"       [:users 2]
+                                   ;; login shortcut
+                                   "a"              [:users 1]}
                       :notes      {1 {:db/id            1
                                       :notes/note-items [[:note-items 1] [:note-items 2] [:note-items 3]]}}}))
 

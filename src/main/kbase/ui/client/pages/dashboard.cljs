@@ -5,9 +5,8 @@
             [fulcro.client.routing :as r :refer [defrouter]]
             [fulcro.client.dom :as dom]))
 
-(defsc DashboardPage [this props]
-  {:query [:db/id {:notes/note-items (prim/get-query notes/NoteItem)}]
-   :ident [:notes/by-id :db/id]}
+(defsc Dashboard [this user]
+  {:query [:db/id {:user/notes (prim/get-query notes/NoteItem)}]}
   (sui/ui-grid
    {:columns   2
     :divided   true
@@ -18,6 +17,12 @@
     "Tags, Types here")
    (sui/ui-grid-column
     {:width 12}
-    (notes/ui-notes props))))
+    (notes/ui-notes user))))
 
-(def ui-dashboard (prim/factory DashboardPage))
+(def ui-dashboard (prim/factory Dashboard))
+
+(defsc DashboardPage [this {:keys [ui.pages/by-key root/current-user] :as props}]
+  {:query         [:ui.pages/by-key {[:root/current-user '_] (prim/get-query Dashboard)}]
+   :initial-state {:ui.pages/by-key :pages/dashboard}
+   :ident         (fn [] [by-key :single])}
+  (ui-dashboard current-user))
