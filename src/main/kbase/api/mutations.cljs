@@ -5,8 +5,6 @@
             [fulcro.client.primitives :as prim]
             [fulcro.ui.form-state :as fs]))
 
-;; Place your client mutations here
-
 (defmutation ping
   "A full-stack mutation for pinging the server. Also shows the ping in the browser log."
   [params]
@@ -22,3 +20,12 @@
 (defmutation rerender-root [_]
   (action [{:keys [reconciler] :as env}]
           (prim/force-root-render! reconciler)))
+
+(defmutation delete-note
+  [{:keys [user-id note-id]}]
+  (action [{:keys [state]}]
+          (let [path     [:user/by-id user-id :user/notes]
+                old-list (get-in @state path)
+                new-list (filterv #(not= (second %) note-id) old-list)]
+            (swap! state assoc-in path new-list)))
+  (remote [env] true))
