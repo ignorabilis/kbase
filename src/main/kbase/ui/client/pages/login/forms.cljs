@@ -2,6 +2,7 @@
   (:require [kbase.ui.semanticui.components :as sui]
             [kbase.api.mutations :as mutations]
             [kbase.ui.client.components.user :as user]
+            [kbase.html5-routing :as routing]
             [fulcro.client.dom :as dom]
             [fulcro.client.primitives :as prim :refer [defsc]]
             [fulcro.client.data-fetch :as df]
@@ -23,7 +24,7 @@
    :initial-state (fn [params] {:db/id :guest})
    :ident         [:user/by-id :db/id]})
 
-(defmutation log-out [_]
+(defmutation log-out-m [_]
   (action [{:keys [state] :as env}]
           (df/load-action env :server.fetch/user UserTinyPreview
                           {:params        {:logout true}
@@ -33,13 +34,14 @@
           (df/remote-load env)))
 
 (defn log-out [component]
-  (prim/transact! component `[(log-out)]))
+  (prim/transact! component `[(log-out-m nil)])
+  (routing/nav-to! component :page-handlers/login))
 
 (defsc LoginForm [this props]
-  (let [{:keys [user/username user/primary-email user/password]
+  (let [{:keys [user/primary-email user/password]
          :as   credentials} (prim/get-state this)
-        current-user (prim/shared this :root/current-user)
-        logged-in?   (number? (:db/id current-user))]
+        {:keys [user/username] :as current-user} (prim/shared this :root/current-user)
+        logged-in? (number? (:db/id current-user))]
     (sui/ui-grid
      {:textAlign     :center
       :verticalAlign :middle

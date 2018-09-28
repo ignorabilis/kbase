@@ -26,39 +26,42 @@
                      :note/image-url   image-url
                      :note/domain      domain})}
   (sui/ui-list-item
-   (sui/ui-image
-    {:floated "right"
-     :src     image-url
-     :width   100
-     :height  100})
    (sui/ui-list-content
-    (sui/ui-list-header
-     {:as   "a"
-      :href url}
-     title)
-    (sui/ui-list-description
-     {:as "div"}
-     (dom/div
-      {:style {:minHeight "80px"
-               :width     "100%"}}
-      description)
-     (dom/div
-      (sui/ui-label-group
-       (sui/ui-label
-        "Tag 1")
-       (sui/ui-label
-        "Tag 2")
-       (dom/a
-        {:href domain}
-        domain))
-      (sui/ui-button
-       {:color   :red
-        :basic   true
-        :compact true
-        :icon    true
-        :onClick #(onDelete id)}
-       (sui/ui-icon
-        {:name "trash"}))
-      )))))
+    (dom/div
+     {:style {:float      "right"
+              :marginLeft 20}}
+     (sui/ui-image
+      {:src    image-url
+       :width  100
+       :height 100}))
+    (dom/div
+     (sui/ui-list-header
+      {:as     "a"
+       :target :_blank
+       :href   url}
+      title)
+     (sui/ui-list-description
+      {:as "div"}
+      (dom/div
+       {:style {:minHeight 80}}
+       description)
+      (dom/div
+       (sui/ui-label-group
+        (sui/ui-label
+         "Tag 1")
+        (sui/ui-label
+         "Tag 2")
+        (dom/a
+         {:href   domain
+          :target :_blank}
+         domain))
+       (sui/ui-button
+        {:color   :red
+         :basic   true
+         :compact true
+         :icon    true
+         :onClick #(onDelete id)}
+        (sui/ui-icon
+         {:name "trash"}))))))))
 
 (def ui-note-item (prim/factory NoteItem {:keyfn :db/id}))
