@@ -21,6 +21,7 @@
 
                  ;; Parsing/scraping
                  [clojurewerkz/urly "1.0.0" :exclusions [com.google.guava/guava]]
+                 [enlive "1.1.6"]
 
                  ;; Tests
                  [fulcrologic/fulcro-spec "2.1.0-1" :scope "test" :exclusions [fulcrologic/fulcro]]]
