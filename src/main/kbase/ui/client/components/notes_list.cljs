@@ -36,7 +36,8 @@
 (defn filter-notes-by-type [filter-value {:keys [note/type]}]
   (if (or (nil? filter-value) (= "all" filter-value))
     true
-    (string/starts-with? type filter-value)))
+    (and (not (nil? type))
+         (string/starts-with? type filter-value))))
 
 (defsc NotesList [this {:keys [db/id user/notes root/notes-filter]}]
   {:query [:db/id {:user/notes (prim/get-query notes/NoteItem)}
