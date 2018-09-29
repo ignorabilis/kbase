@@ -16,21 +16,25 @@
                                                                :note-id ~note-id})]))
         tempid      (prim/tempid)]
     (dom/div
-     (sui/ui-input
-      {:placeholder "Note URL"
-       :type        "text"
-       :value       (or url "")
-       :onChange    #(prim/update-state! this assoc :url (.. % -target -value))
-       :action      {:color   :teal
-                     :icon    :plus
-                     :onClick (fn []
-                                (prim/update-state! this assoc :url "")
-                                (prim/ptransact!
-                                 this
-                                 `[(api/add-note {:user-id ~id
-                                                  :tempid  ~tempid
-                                                  :url     ~url})
-                                   (api/finish-add-note {:user-id ~id})]))}})
+     (dom/div
+      {:style {:textAlign :right}}
+      (sui/ui-input
+       {:placeholder "Add Note URL"
+        :type        "text"
+        :value       (or url "")
+        :style       {:marginBottom 30
+                      :marginTop    20}
+        :onChange    #(prim/update-state! this assoc :url (.. % -target -value))
+        :action      {:color   :teal
+                      :icon    :plus
+                      :onClick (fn []
+                                 (prim/update-state! this assoc :url "")
+                                 (prim/ptransact!
+                                  this
+                                  `[(api/add-note {:user-id ~id
+                                                   :tempid  ~tempid
+                                                   :url     ~url})
+                                    (api/finish-add-note {:user-id ~id})]))}}))
      (sui/ui-list
       {:divided true
        :relaxed true}
