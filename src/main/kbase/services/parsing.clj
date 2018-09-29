@@ -1,6 +1,7 @@
 (ns kbase.services.parsing
   (:require [net.cgrand.enlive-html :as html]
-            [clojurewerkz.urly.core :as urly])
+            [clojurewerkz.urly.core :as urly]
+            [clojure.string :as string])
   (:import (java.net URL)
            (java.util UUID)))
 
@@ -25,7 +26,7 @@
         meta-tags (html/select html [:meta])
         url       (og-property->og-content meta-tags "og:url")
         title     (og-property->og-content meta-tags "og:title")
-        type      (og-property->og-content meta-tags "og:type")
+        type      (string/lower-case (og-property->og-content meta-tags "og:type"))
         image-url (og-property->og-content meta-tags "og:image")
         desc      (og-property->og-content meta-tags "og:description")
         urly-url  (urly/url-like url)
@@ -37,4 +38,5 @@
      :note/title       title
      :note/description desc
      :note/image-url   image-url
-     :note/domain      domain}))
+     :note/domain      domain
+     :note/type        type}))

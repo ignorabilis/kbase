@@ -4,7 +4,8 @@
             [fulcro.client.dom :as dom]
             [fulcro.client.primitives :refer [defsc]]
             [fulcro.client.cards :refer [defcard-fulcro]]
-            [fulcro.client.primitives :as prim]))
+            [fulcro.client.primitives :as prim]
+            [clojure.string :as string]))
 
 (defsc NoteItem [this
                  {:keys [db/id note/url
@@ -47,6 +48,17 @@
        description)
       (dom/div
        (sui/ui-label-group
+        (when type
+          (sui/ui-label
+           {:color (case type
+                     "article" :olive
+                     "book" :brown
+                     "books.book" :brown
+                     "video" :blue
+                     "video.movie" :blue
+                     :grey)
+            :style {:marginRight 20}}
+           (string/capitalize type)))
         (sui/ui-label
          "Tag 1")
         (sui/ui-label
