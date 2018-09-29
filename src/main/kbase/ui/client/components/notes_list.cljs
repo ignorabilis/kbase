@@ -12,23 +12,24 @@
 (defsc TypeFilter [this {:keys [filter-notes-type/filter-value]}]
   {:query [:filter-notes-type/filter-value]}
   (sui/ui-dropdown
-   {:button    true
-    :fluid     true
-    :selection true
-    :value     filter-value
-    :onChange  (fn [_ data]
-                 (let [{:keys [value]} (js->clj data :keywordize-keys true)]
-                   (prim/ptransact!
-                    this
-                    `[(api/filter-notes {:filter-value ~value})])))
-    :options   [{:text  "Article"
-                 :value "article"}
-                {:text  "Book"
-                 :value "book"}
-                {:text  "Video"
-                 :value "video"}
-                {:text  "All"
-                 :value "all"}]}))
+   {:button      true
+    :fluid       true
+    :selection   true
+    :placeholder "Note Type"
+    :value       filter-value
+    :onChange    (fn [_ data]
+                   (let [{:keys [value]} (js->clj data :keywordize-keys true)]
+                     (prim/ptransact!
+                      this
+                      `[(api/filter-notes {:filter-value ~value})])))
+    :options     [{:text  "Article"
+                   :value "article"}
+                  {:text  "Book"
+                   :value "book"}
+                  {:text  "Video"
+                   :value "video"}
+                  {:text  "All"
+                   :value "all"}]}))
 
 (def ui-type-filter (prim/factory TypeFilter))
 
@@ -46,8 +47,8 @@
                                                                :note-id ~note-id})]))
         tempid      (prim/tempid)
         {:keys [filter-notes-type/filter-value]} notes-filter
-        notes (filterv (partial filter-notes-by-type filter-value) notes)
-        notes (sort-by :note/added #(compare %2 %1) notes)]
+        notes       (filterv (partial filter-notes-by-type filter-value) notes)
+        notes       (sort-by :note/added #(compare %2 %1) notes)]
     (dom/div
      (dom/div
       {:style {:textAlign "right"}}

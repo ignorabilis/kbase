@@ -17,7 +17,6 @@
     :stackable true}
    (sui/ui-grid-column
     {:width 4}
-    "Tags, Types here"
     (dom/div
      (notes-list/ui-type-filter notes-filter)))
    (sui/ui-grid-column
