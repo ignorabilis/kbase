@@ -14,7 +14,7 @@
                  {:keys [onDelete]}]
   {:query         [:db/id :note/url
                    :note/title :note/description :note/type :note/image-url
-                   :note/domain #_:note/tags]
+                   :note/domain :note/added #_:note/tags]
    :ident         [:note-item/by-id :db/id]
    :initial-state (fn [{:keys [id url
                                title description type image-url

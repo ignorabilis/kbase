@@ -46,7 +46,8 @@
                                                                :note-id ~note-id})]))
         tempid      (prim/tempid)
         {:keys [filter-notes-type/filter-value]} notes-filter
-        notes (filterv (partial filter-notes-by-type filter-value) notes)]
+        notes (filterv (partial filter-notes-by-type filter-value) notes)
+        notes (sort-by :note/added #(compare %2 %1) notes)]
     (dom/div
      (dom/div
       {:style {:textAlign "right"}}

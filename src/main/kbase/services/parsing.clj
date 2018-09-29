@@ -39,4 +39,5 @@
      :note/description desc
      :note/image-url   image-url
      :note/domain      domain
-     :note/type        type}))
+     :note/type        type
+     :note/added       (System/currentTimeMillis)}))
