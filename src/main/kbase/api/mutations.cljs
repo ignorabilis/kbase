@@ -50,6 +50,12 @@
 (defmutation finish-add-note
   [all #_{:keys [user-id]}]
   (action [{:keys [state]}]
-          (prn "finish???" all)
+          ;; TODO - probably show a msg here OR just delete this mutation
           state
           ))
+
+(defmutation filter-notes
+  [{:keys [filter-value]}]
+  (action [{:keys [state]}]
+          (let [path [:root/notes-filter :filter-notes-type/filter-value]]
+            (swap! state assoc-in path filter-value))))

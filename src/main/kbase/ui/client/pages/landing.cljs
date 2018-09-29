@@ -27,7 +27,7 @@
      "Imagine anything")
     (sui/ui-button
      {:size    :large
-      :color   :blue
+      :color   :teal
       :onClick #(routing/nav-to! this :page-handlers/login)}
      "Get Started"
      (sui/ui-icon

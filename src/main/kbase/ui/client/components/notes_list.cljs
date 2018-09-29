@@ -6,18 +6,50 @@
             [fulcro.client.dom :as dom]
             [fulcro.client.primitives :refer [defsc]]
             [fulcro.client.cards :refer [defcard-fulcro]]
-            [fulcro.client.primitives :as prim]))
+            [fulcro.client.primitives :as prim]
+            [clojure.string :as string]))
 
-(defsc NotesList [this {:keys [db/id user/notes]}]
-  {:query [:db/id {:user/notes (prim/get-query notes/NoteItem)}]}
+(defsc TypeFilter [this {:keys [filter-notes-type/filter-value]}]
+  {:query [:filter-notes-type/filter-value]}
+  (sui/ui-dropdown
+   {:button    true
+    :fluid     true
+    :selection true
+    :value     filter-value
+    :onChange  (fn [_ data]
+                 (let [{:keys [value]} (js->clj data :keywordize-keys true)]
+                   (prim/ptransact!
+                    this
+                    `[(api/filter-notes {:filter-value ~value})])))
+    :options   [{:text  "Article"
+                 :value "article"}
+                {:text  "Book"
+                 :value "book"}
+                {:text  "Video"
+                 :value "video"}
+                {:text  "All"
+                 :value "all"}]}))
+
+(def ui-type-filter (prim/factory TypeFilter))
+
+(defn filter-notes-by-type [filter-value {:keys [note/type]}]
+  (if (or (nil? filter-value) (= "all" filter-value))
+    true
+    (string/starts-with? type filter-value)))
+
+(defsc NotesList [this {:keys [db/id user/notes root/notes-filter]}]
+  {:query [:db/id {:user/notes (prim/get-query notes/NoteItem)}
+           {[:root/notes-filter '_] (prim/get-query TypeFilter)}]}
   (let [{:keys [url]} (prim/get-state this)
         del-note-fn (fn [note-id]
                       (prim/transact! this `[(api/delete-note {:user-id ~id
                                                                :note-id ~note-id})]))
-        tempid      (prim/tempid)]
+        tempid      (prim/tempid)
+        {:keys [filter-notes-type/filter-value]} notes-filter
+        notes (filterv (partial filter-notes-by-type filter-value) notes)]
     (dom/div
      (dom/div
-      {:style {:textAlign :right}}
+      {:style {:textAlign "right"}}
       (sui/ui-input
        {:placeholder "Add Note URL"
         :type        "text"

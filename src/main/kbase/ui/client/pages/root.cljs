@@ -68,7 +68,4 @@
   (sui/ui-container
    {:fluid true}
    (ui-menu props)
-   (dom/div
-    {:style {:paddingLeft  20
-             :paddingRight 20}}
-    (ui-top-router router))))
+   (ui-top-router router)))
