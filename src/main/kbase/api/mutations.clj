@@ -1,6 +1,6 @@
 (ns kbase.api.mutations
   (:require [kbase.api.read :refer [kbase-database]]
-            [kbase.services.parsing :as parsing]
+            [kbase.db.core :as db]
             [taoensso.timbre :as timbre]
             [fulcro.server :refer [defmutation]]
             [fulcro.client.primitives :as prim]))
@@ -31,21 +31,7 @@
 (defmutation add-note
              [{:keys [user-id tempid url]}]
              (action [{:keys [state]}]
-                     (let [{:keys [db/id] :as note} (parsing/url->note-db url)]
-                       (swap!
-                        kbase-database
-                        update-in
-                        [:note-items]
-                        (fn [note-items]
-                          (assoc note-items id note)))
-
-                       (swap!
-                        kbase-database
-                        update-in
-                        [:users user-id :user/notes]
-                        (fn [users-notes]
-                          (conj users-notes [:note-items id])))
-
+                     (let [{:keys [db/id] :as note} (db/write-note user-id url)]
                        (merge
                         note
                         {::prim/tempids {tempid id}}))))

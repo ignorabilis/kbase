@@ -1,4 +1,4 @@
-(ns kbase.services.parsing
+(ns kbase.services.web.scrape
   (:require [net.cgrand.enlive-html :as html]
             [clojurewerkz.urly.core :as urly]
             [clojure.string :as string])

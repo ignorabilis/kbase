@@ -93,7 +93,7 @@
            result)))
 
 ;; TODO - this here needs to be hooked to a proper auth library
-(defn find-user [query {:keys [user/primary-email user/password]}]
+(defn validate-user [query {:keys [user/primary-email user/password]}]
   (let [data              (prim/db->tree
                             [{[:users primary-email] (conj query :user/password)}]
                             @kbase-database
@@ -107,9 +107,9 @@
       {})))
 
 (defquery-root
-  :server.fetch/user
-  (value [{:keys [query]} credentials]
-         (find-user query credentials)))
+ :server.fetch/user
+ (value [{:keys [query]} credentials]
+        (validate-user query credentials)))
 
 (defquery-entity
   :notes/by-id

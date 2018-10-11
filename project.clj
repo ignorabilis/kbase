@@ -18,6 +18,7 @@
                  [bidi "2.1.3"]
                  [kibu/pushy "0.3.8"]
                  [com.draines/postal "2.0.2"]
+                 [io.forward/clojure-mail "1.0.7"]
 
                  ;; Parsing/scraping
                  [clojurewerkz/urly "1.0.0" :exclusions [com.google.guava/guava]]
