@@ -1,6 +1,9 @@
 {
-    "type": "docker",
-    "features": {
-        "cloud": "v1"
-    }
+  "type": "docker",
+  "features": {
+    "cloud": "v1"
+  },
+  "alias": [
+    "kbase.now.sh"
+  ]
 }
